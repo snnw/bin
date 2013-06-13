@@ -56,8 +56,13 @@ git clone git@bitbucket.org:snnw/snnw_lists.git $HOME/$LISTS_SRC
 git clone git@bitbucket.org:snnw/snnw_bin.git   $HOME/$BIN_SRC
 git clone git@bitbucket.org:snnw/snnw_projects.git $HOME/$PR
 
+
+# Repository for System validation
+# hg clone ssh://hg@bitbucket.org/saberwolf/2iw26-system-validation $HOME/$SRC/mcrl2
+
 if [ $CHECKOUT_EXTERNAL ]; then
   hg clone -u release https://code.google.com/p/go $HOME/$SRC/go
+  git clone git://github.com/martine/ninja.git $HOME/$SRC/ninja
 fi
 
 echo
