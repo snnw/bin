@@ -1,1 +1,0 @@
-../multimedia/dontstarve/dontstarve.sh
