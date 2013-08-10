@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export PATH="$PATH":$HOME/src/depot_tools
+export GYP_DEFINES="clang=1 component=shared_library"
+export CHROME_DEVEL_SANDBOX=/usr/local/sbin/chrome-devel-sandbox
+export GYP_PARALLEL=5
+
+PROMPT_PREFIX="[crosh] " /bin/bash
