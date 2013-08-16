@@ -1,0 +1,63 @@
+#!/bin/bash
+
+BUILD_TYPE=Debug
+UPDATE_GYP=false
+TESTS=false
+AURA=false
+
+while getopts "adrut" opt; do
+  case $opt in
+    d)
+      BUILD_TYPE=Debug
+      ;;
+    r)
+      BUILD_TYPE=Release
+      ;;
+    u)
+      UPDATE_GYP=true
+      ;;
+    t)
+      TESTS=true
+      ;;
+    a)
+      AURA=true
+      ;;
+    \?)
+      echo "Invalid option -$OPTARG" >&2
+  esac
+done
+
+TARGETS="chrome chrome_sandbox"
+
+if $TESTS; then
+  TARGETS+=" interactive_ui_tests"
+fi
+
+if $AURA; then
+  export GYP_DEFINES+=" use_aura=1 chromeos=1"
+fi
+
+if $UPDATE_GYP; then
+  pushd ~/src/chromium/src/
+  crosh -c build/gyp_chromium || exit 1
+  popd
+fi
+
+RSYNC_OPTIONS="--exclude=.git --exclude=.svn --progress -vrlpth"
+
+if $AURA; then
+  DEST="/home/snnw/tmp/chromium-aura"
+else
+  DEST="/home/snnw/tmp/chromium"
+fi
+
+rsync $RSYNC_OPTIONS ~/src/chromium/src madcow:$DEST || exit 1
+
+BUILD_CMD="ninja -j4 -C out/$BUILD_TYPE $TARGETS"
+REMOTE_CMD="cd $DEST/src; ~/bin/crosh -c '${BUILD_CMD}'"
+
+ssh madcow "${REMOTE_CMD}" || exit 1 
+
+RSYNC_OPTIONS="--exclude=obj --exclude=gen --progress -vrlpth"
+
+rsync $RSYNC_OPTIONS madcow:$DEST/src/out/{Debug,Release} $DEST/src/out || exit 1

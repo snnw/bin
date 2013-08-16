@@ -1,0 +1,15 @@
+#!/bin/bash
+
+pushd $HOME/src/chromium/src
+
+br=$(git rev-parse --abbrev-ref HEAD)
+
+git checkout lkgr || (popd; exit 1)
+
+git pull && crosh -c "gclient sync --jobs=16" || (popd; exit 1)
+
+git checkout $br || (popd; exit 1)
+
+git pull || (popd; exit 1)
+
+popd
