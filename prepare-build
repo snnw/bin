@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rsync --exclude=.git --exclude=.svn -rlpci ~/src/chromium/src $1
+
