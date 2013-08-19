@@ -53,6 +53,8 @@ fi
 
 rsync $RSYNC_OPTIONS ~/src/chromium/src madcow:$DEST || exit 1
 
+ssh madcow "cd ~/src/depot_tools; git pull" || exit 1
+
 BUILD_CMD="ninja -j4 -C out/$BUILD_TYPE $TARGETS"
 REMOTE_CMD="cd $DEST/src; ~/bin/crosh -c '${BUILD_CMD}'"
 
