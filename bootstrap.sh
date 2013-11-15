@@ -16,7 +16,7 @@ BIN_SRC="$SRC/$BIN"
 OLDHOME="$TMP/home"
 DROPBOX='Dropbox'
 
-CHECKOUT_EXTERNAL=0
+CHECKOUT_EXTERNAL=1
 
 
 mkdir -p $HOME/tmp/home
@@ -56,8 +56,7 @@ git clone git@bitbucket.org:snnw/snnw_projects.git $HOME/$PR
 # hg clone ssh://hg@bitbucket.org/saberwolf/2iw26-system-validation $HOME/$SRC/mcrl2
 
 if [ $CHECKOUT_EXTERNAL ]; then
-  hg clone -u release https://code.google.com/p/go $HOME/$SRC/go
-  git clone git://github.com/martine/ninja.git $HOME/$SRC/ninja
+  wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3047_x64.tar.bz2 -O - | tar xjC $HOME/$SRC
 fi
 
 echo
