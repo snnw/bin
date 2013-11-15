@@ -16,7 +16,7 @@ BIN_SRC="$SRC/$BIN"
 OLDHOME="$TMP/home"
 DROPBOX='Dropbox'
 
-CHECKOUT_EXTERNAL=1
+CHECKOUT_EXTERNAL=0
 
 
 mkdir -p $HOME/tmp/home
