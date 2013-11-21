@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+set -x
+
 HOME=`pwd`
 
 BIN='bin'
@@ -18,10 +21,25 @@ DROPBOX='Dropbox'
 
 CHECKOUT_EXTERNAL=1
 
+if [ ! -d .ssh ]; then
+  echo "ERROR: no ./.ssh directory"
+  exit 1
+fi
+
+if [ ! -f .ssh/id_rsa ]; then
+  echo "ERROR: no private key found"
+  exit 1
+fi
 
 mkdir -p $HOME/tmp/home
 
-mv * .* $HOME/tmp/home/ 2>/dev/null
+shopt -s dotglob
+GLOBIGNORE=tmp
+mv * $HOME/tmp/home/
+unset GLOBIGNORE
+shopt -u dotglob
+
+mv $HOME/tmp/home/.ssh $HOME
 
 # TODO(snnw) separate README generation
 cat > $HOME/README << EOF
