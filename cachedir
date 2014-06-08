@@ -1,0 +1,72 @@
+#!/usr/bin/python
+# Copyright 2012, 2013  Lars Wirzenius
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+import cliapp
+import os
+import sys
+
+
+__version__ = '1.2'
+
+
+class Cachedir(cliapp.Application):
+
+    _tag_name = 'CACHEDIR.TAG'
+    _tag = 'Signature: 8a477f597d28d172789f06886806bc55\n'
+
+    def _join(self, dirname):
+        return os.path.join(dirname, self._tag_name)
+
+    def cmd_tag(self, args):
+        '''Add cache tag to directories.'''
+        
+        for dirname in args:
+            with open(self._join(dirname), 'w') as f:
+                f.write(self._tag)
+    
+    def cmd_untag(self, args):
+        '''Remove cache tag from directories.'''
+
+        for dirname in args:
+            os.remove(self._join(dirname))
+
+    def cmd_iscache(self, args):
+        '''Are all named directories tagged?
+        
+        There is no output, but exit code is 0 if all named directories
+        are tagged as cache directories.
+        
+        '''
+
+        errors = False
+        for dirname in args:
+            if not os.path.exists(self._join(dirname)):
+                sys.stderr.write('%s is not a cache directory\n' % dirname)
+                errors = True
+        if errors:
+            sys.exit(1)
+
+    def cmd_find(self, args):
+        '''Find cache directories under the given directories.'''
+        
+        for startdir in args:
+            for dirname, subdirs, filenames in os.walk(startdir):
+                if os.path.exists(self._join(dirname)):
+                    self.output.write('%s\n' % dirname)
+        
+
+Cachedir(version=__version__).run()

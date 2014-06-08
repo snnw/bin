@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sleep 120; and notify-send --hint=int:transient:1 TIME "2 minutes are over"
