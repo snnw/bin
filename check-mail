@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ionice -c 3 chrt --idle 0 /bin/sh -c "getmail -q 2>/dev/null && notmuch new 2>/dev/null && /home/snnw/bin/afew --tag --new 2>/dev/null"
